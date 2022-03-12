@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/abz-1/ers/issues"
   },
-  "homepage": "https://github.com/abz-1/ers#readme"
+  "homepage": "https://github.com/abz-1/ers#readme",
+  "dependencies": {
+    "node-windows": "^1.0.0-beta.6"
+  }
 }
