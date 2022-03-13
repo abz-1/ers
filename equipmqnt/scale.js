@@ -4,6 +4,7 @@ class IND310 extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
+        this.last = {}
     }
 
     _onData(data) {
@@ -15,7 +16,7 @@ class IND310 extends Equipment {
             weight = parseInt(tmp[1])
         } finally {}
 
-        let event = {
+        this.last = {
             id: this.id,
             type: this.type,
             date: new Date(),
@@ -25,7 +26,7 @@ class IND310 extends Equipment {
             }
         }
 
-        this.emit('weight', event)
+        this.emit('weight', this.last)
     }
 }
 
@@ -35,6 +36,7 @@ class TC17P extends Equipment {
         this._connect()
 
         this._interval = setInterval(this._nextValueCommand, 500)
+        this.last = {}
     }
 
     _nextValueCommand() {
@@ -50,7 +52,7 @@ class TC17P extends Equipment {
             weight = parseInt(tmp.replace(/\D/g, ''))
         } finally {}
 
-        let event = {
+        this.last = {
             id: this.id,
             type: this.type,
             date: new Date(),
@@ -60,7 +62,7 @@ class TC17P extends Equipment {
             }
         }
 
-        this.emit('weight', event)
+        this.emit('weight', this.last)
     }
 }
 
@@ -68,6 +70,7 @@ class HBT1B extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
+        this.last = {}
     }
 
     _onData(data) {
@@ -79,7 +82,7 @@ class HBT1B extends Equipment {
             weight = parseInt(tmp)
         } finally {}
 
-        let event = {
+        this.last = {
             id: this.id,
             type: this.type,
             date: new Date(),
@@ -89,7 +92,7 @@ class HBT1B extends Equipment {
             }
         }
 
-        this.emit('weight', event)
+        this.emit('weight', this.last)
     }
 }
 
@@ -97,6 +100,7 @@ class HBT9 extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
+        this.last = {}
     }
 
     _onData(data) {
@@ -110,7 +114,7 @@ class HBT9 extends Equipment {
             weight = parseInt(tmp.replace('wn', '').replace('kg', ''))
         } finally {}
 
-        let event = {
+        this.last = {
             id: this.id,
             type: this.type,
             date: new Date(),
@@ -120,7 +124,7 @@ class HBT9 extends Equipment {
             }
         }
 
-        this.emit('weight', event)
+        this.emit('weight', this.last)
     }
 }
 
@@ -129,6 +133,7 @@ class NOV extends Equipment {
         super(options)
         this._connect()
         this._buffer = Buffer.from([])
+        this.last = {}
     }
 
     _onData(data) {
@@ -149,7 +154,7 @@ class NOV extends Equipment {
 
         this._buffer = Buffer.from([])
 
-        let event = {
+        this.last = {
             id: this.id,
             type: this.type,
             date: new Date(),
@@ -159,7 +164,7 @@ class NOV extends Equipment {
             }
         }
 
-        this.emit('weight', event)
+        this.emit('weight', this.last)
     }
 }
 
