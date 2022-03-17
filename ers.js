@@ -19,6 +19,8 @@ app.use(bodyParser.json())
 app.get('/events/:type/:id', (req, res, next) => {
     let id = req.params.id, type = req.params.type
 
+    console.log(req.params)
+
     (async () => {
         try {
             let last = await equipment[type + '-' + id].last
