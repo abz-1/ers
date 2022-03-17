@@ -31,7 +31,7 @@ app.get('/events/:type/:id', (req, res, next) => {
 })
 
 let port = config.get('service:port')
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log('Server started on port: %d', port)
     console.log('Starting data collection')
     await startDataCllection()
