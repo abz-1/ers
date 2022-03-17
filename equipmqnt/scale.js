@@ -4,7 +4,16 @@ class IND310 extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-        this.last = {}
+
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
+        }
     }
 
     _onData(data) {
@@ -16,15 +25,9 @@ class IND310 extends Equipment {
             weight = parseInt(tmp[1])
         } finally {}
 
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: weight,
-                stable: stable
-            }
-        }
+        this.last.date = new Date()
+        this.last.data.weight = weight
+        this.last.data.stable = stable
 
         this.emit('weight', this.last)
     }
@@ -36,7 +39,15 @@ class TC17P extends Equipment {
         this._connect()
 
         this._interval = setInterval(this._nextValueCommand, 500)
-        this.last = {}
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
+        }
     }
 
     _nextValueCommand() {
@@ -52,15 +63,9 @@ class TC17P extends Equipment {
             weight = parseInt(tmp.replace(/\D/g, ''))
         } finally {}
 
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: weight,
-                stable: stable
-            }
-        }
+        this.last.date = new Date()
+        this.last.data.weight = weight
+        this.last.data.stable = stable
 
         this.emit('weight', this.last)
     }
@@ -70,7 +75,16 @@ class HBT1B extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-        this.last = {}
+
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
+        }
     }
 
     _onData(data) {
@@ -82,15 +96,9 @@ class HBT1B extends Equipment {
             weight = parseInt(tmp)
         } finally {}
 
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: weight,
-                stable: stable
-            }
-        }
+        this.last.date = new Date()
+        this.last.data.weight = weight
+        this.last.data.stable = stable
 
         this.emit('weight', this.last)
     }
@@ -100,7 +108,16 @@ class HBT9 extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-        this.last = {}
+        
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
+        }
     }
 
     _onData(data) {
@@ -114,15 +131,9 @@ class HBT9 extends Equipment {
             weight = parseInt(tmp.replace('wn', '').replace('kg', ''))
         } finally {}
 
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: weight,
-                stable: stable
-            }
-        }
+        this.last.date = new Date()
+        this.last.data.weight = weight
+        this.last.data.stable = stable
 
         this.emit('weight', this.last)
     }
@@ -132,8 +143,17 @@ class NOV extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
+        
         this._buffer = Buffer.from([])
-        this.last = {}
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
+        }
     }
 
     _onData(data) {
@@ -154,15 +174,9 @@ class NOV extends Equipment {
 
         this._buffer = Buffer.from([])
 
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: weight,
-                stable: stable
-            }
-        }
+        this.last.date = new Date()
+        this.last.data.weight = weight
+        this.last.data.stable = stable
 
         this.emit('weight', this.last)
     }
@@ -187,5 +201,10 @@ function createScale(options) {
 }
 
 module.exports = {
-    createScale
+    createScale,
+    IND310,
+    TC17P,
+    HBT1B,
+    HBT9,
+    NOV
 }
