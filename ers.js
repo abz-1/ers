@@ -34,10 +34,10 @@ let port = config.get('service:port')
 app.listen(port, () => {
     console.log('Server started on port: %d', port)
     console.log('Starting data collection')
-    startDataCllection()
+    await startDataCllection()
 })
 
-function startDataCllection() {
+async function startDataCllection() {
     let store = new Store(config.get('store'))
 
     try {
