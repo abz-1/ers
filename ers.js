@@ -16,20 +16,16 @@ config.argv().env().file({
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/events/:type/:id', (req, res, next) => {
+app.get('/events/:type/:id', async (req, res, next) => {
     let id = req.params.id, type = req.params.type
 
-    console.log(req.params)
-
-    (async () => {
-        try {
-            let last = await equipment[type + '-' + id].last
-            console.log('%s : %s', last.id, last.date)
-            res.send(last)
-        } catch(e) {
-            res.status(404).end()
-        }
-    })()
+    try {
+        let last = await equipment[type + '-' + id].last
+        console.log('%s : %s', last.id, last.date)
+        res.send(last)
+    } catch(e) {
+        res.status(404).end()
+    }
 })
 
 let port = config.get('service:port')
