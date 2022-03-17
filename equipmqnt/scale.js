@@ -38,7 +38,7 @@ class TC17P extends Equipment {
         super(options)
         this._connect()
 
-        this._interval = setInterval(this._nextValueCommand, 500)
+        this._interval = setInterval(this._nextValueCommand.bind(this), 500)
         this.last = {
             id: this.id,
             type: this.type,
