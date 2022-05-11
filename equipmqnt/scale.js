@@ -194,7 +194,7 @@ function createScale(options) {
             case 'NOV': result = new NOV(options); break;
         }
     } catch(error) {
-        console.log(error)
+        console.error(error)
     }
 
     return result

@@ -19,7 +19,7 @@ module.exports = class extends net.Socket {
         try {
             this.write(data)
         } catch(e) {
-            console.log(e)
+            console.error(e)
         }
     }
 
@@ -29,7 +29,7 @@ module.exports = class extends net.Socket {
     }
 
     _onError(error) {
-        this.destroy();
+        this.destroy()
         switch(error.code) {
             case 'ENETUNREACH':
             case 'EHOSTUNREACH':

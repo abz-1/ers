@@ -83,7 +83,7 @@ module.exports = class {
             try {
                 this._last.data.image = (await Graber.grab(this.url)).toString('base64')
             } catch(error) {
-                console.log(error)
+                console.error(error)
                 this._last.data.image = ''
             }
 

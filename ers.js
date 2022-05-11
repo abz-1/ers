@@ -25,6 +25,7 @@ app.get('/events/:type/:id', async (req, res, next) => {
         res.send(last)
     } catch(e) {
         res.status(404).end()
+        console.error(e)
     }
 })
 
@@ -66,6 +67,6 @@ async function startDataCllection() {
             }
         })
     } catch(e) {
-        console.log(e)
+        console.error(e)
     }
 }
