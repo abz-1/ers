@@ -38,7 +38,7 @@ class TC17P extends Equipment {
         super(options)
         this._connect()
 
-        this._interval = setInterval(this._nextValueCommand.bind(this), 500)
+        //this._interval = setInterval(this._nextValueCommand.bind(this), 500)
         this.last = {
             id: this.id,
             type: this.type,
@@ -48,6 +48,7 @@ class TC17P extends Equipment {
                 stable: true
             }
         }
+        this.setTimeout(500, this._nextValueCommand.bind(this))
     }
 
     _nextValueCommand() {
@@ -68,6 +69,7 @@ class TC17P extends Equipment {
         this.last.data.stable = stable
 
         this.emit('weight', this.last)
+        this._nextValueCommand()
     }
 }
 
