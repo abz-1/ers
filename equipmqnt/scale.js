@@ -37,7 +37,6 @@ class TC17P extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-        this._next = Buffer.from([0x10])
 
         this.last = {
             id: this.id,
@@ -49,7 +48,7 @@ class TC17P extends Equipment {
             }
         }
 
-        this._write(this._next)
+        this._nextValueCommand()
         setInterval(this._kickMe.bind(this), 5000)
     }
 
@@ -57,16 +56,12 @@ class TC17P extends Equipment {
         let diff = Math.abs((new Date().getTime() - this.last.date.getTime()) / 1000)
         if(diff >= 30) {
             console.error(`${this.id}(${this.module}) ${this.server}:${this.port} \\ "застрял" или головное устройство отключено в течении ${(diff / 60).toFixed(2)} минут.`)
-            this._write(this._next)
+            this._nextValueCommand()
         }
     }
 
-    _write(data) {
-        try {
-            this.write(data)
-        } catch(e) {
-            console.error(e)
-        }
+    _nextValueCommand() {
+        this.request(Buffer.from([0x10]))
     }
 
     _onData(data) {
@@ -83,7 +78,7 @@ class TC17P extends Equipment {
         this.last.data.stable = stable
 
         this.emit('weight', this.last)
-        this._write(this._next)
+        this._nextValueCommand()
     }
 }
 
