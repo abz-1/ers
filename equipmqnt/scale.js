@@ -37,6 +37,7 @@ class TC17P extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
+        this._next = Buffer.from([0x10])
 
         this.last = {
             id: this.id,
@@ -47,20 +48,31 @@ class TC17P extends Equipment {
                 stable: true
             }
         }
-        this._nextValueCommand()
-        //this._interval = setInterval(this._nextValueCommand.bind(this), 1000)
+
+        this._write(this._next)
+        setInterval(this._kickMe.bind(this), 5000)
     }
 
-    _nextValueCommand() {
-        //this.request(Buffer.from([0xFF, 0x00, 0x10, 0x8F, 0xFF, 0xFF]))
-        this.request(Buffer.from([0x10]))
+    _kickMe() {
+        let diff = Math.abs((new Date().getTime() - this.last.date.getTime()) / 1000)
+        if(diff >= 30) {
+            console.error(`${this.id}(${this.module}) ${this.server}:${this.port} \\ "застрял" или головное устройство отключено в течении ${(diff / 60).toFixed(2)} минут.`)
+            this._write(this._next)
+        }
+    }
+
+    _write(data) {
+        try {
+            this.write(data)
+        } catch(e) {
+            console.error(e)
+        }
     }
 
     _onData(data) {
         let tmp, stable = false, weight = 0
 
         try {
-            //console.log(data)
             tmp    = data.toString()
             stable = (tmp.slice(-1) === '"') ? true : false
             weight = parseInt(tmp.replace(/\D/g, ''))
@@ -71,7 +83,7 @@ class TC17P extends Equipment {
         this.last.data.stable = stable
 
         this.emit('weight', this.last)
-        this._nextValueCommand()
+        this._write(this._next)
     }
 }
 

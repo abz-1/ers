@@ -15,14 +15,6 @@ module.exports = class extends net.Socket {
         this.pinouts     = options.pinouts
     }
 
-    request(data) {
-        try {
-            this.write(data)
-        } catch(e) {
-            console.error(e)
-        }
-    }
-
     _onConnet() {
         this.setKeepAlive(true, 500)
         this.on('data', this._onData)
