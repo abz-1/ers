@@ -52,13 +52,15 @@ class TC17P extends Equipment {
     }
 
     _nextValueCommand() {
-        this.request(Buffer.from([0xFF, 0x00, 0x10, 0x8F, 0xFF, 0xFF]))
+        //this.request(Buffer.from([0xFF, 0x00, 0x10, 0x8F, 0xFF, 0xFF]))
+        this.request(Buffer.from([0x10]))
     }
 
     _onData(data) {
         let tmp, stable = false, weight = 0
 
         try {
+            //console.log(data)
             tmp    = data.toString()
             stable = (tmp.slice(-1) === '"') ? true : false
             weight = parseInt(tmp.replace(/\D/g, ''))
