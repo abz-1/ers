@@ -37,9 +37,7 @@ class TC17P extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-        this._cmd = Buffer.from([0xFF, 0x00, 0x10, 0x8F, 0xFF, 0xFF])
 
-        //this._interval = setInterval(this._nextValueCommand.bind(this), 500)
         this.last = {
             id: this.id,
             type: this.type,
@@ -49,8 +47,8 @@ class TC17P extends Equipment {
                 stable: true
             }
         }
-        //this.setTimeout(500, this._nextValueCommand.bind(this))
-        this.write(this._cmd)
+        this._nextValueCommand()
+        //this._interval = setInterval(this._nextValueCommand.bind(this), 1000)
     }
 
     _nextValueCommand() {
@@ -71,8 +69,7 @@ class TC17P extends Equipment {
         this.last.data.stable = stable
 
         this.emit('weight', this.last)
-        this.write(this._cmd)
-        //this._nextValueCommand()
+        this._nextValueCommand()
     }
 }
 
