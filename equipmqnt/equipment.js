@@ -28,9 +28,10 @@ module.exports = class extends net.Socket {
         this.on('data', this._onData)
     }
 
-    _onError(error) {
+    _onError(e) {
+        console.error(e)
         this.destroy()
-        switch(error.code) {
+        switch(e.code) {
             case 'ENETUNREACH':
             case 'EHOSTUNREACH':
             case 'ETIMEDOUT':
@@ -42,12 +43,14 @@ module.exports = class extends net.Socket {
     _connect() {
         this.connect(this.port, this.server, this._onConnet)
         this.on('error', this._onError)
+        this.on('close', this._reconnect)
+        this.on('end', this._reconnect)
     }
 
     _reconnect() {
         console.log('%s reconnecting at 30 seconds...', this.id)
         setTimeout(() => { 
             this._connect()
-        }, 30000)
+        }, 10000)
     }
 }
