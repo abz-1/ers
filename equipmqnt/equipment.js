@@ -48,9 +48,9 @@ module.exports = class extends net.Socket {
     }
 
     _reconnect() {
-        console.log('%s reconnecting at 30 seconds...', this.id)
-        setTimeout(() => { 
+        console.log('%s reconnecting...', this.id)
+        //setTimeout(() => { 
             this._connect()
-        }, 10000)
+        //}, 10000)
     }
 }
