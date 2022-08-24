@@ -17,11 +17,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get('/events/:type/:id', async (req, res, next) => {
-    let id = req.params.id, type = req.params.type
+    let id = req.params.id, type = req.params.type, today = new Date()
 
     try {
         let last = await equipment[type + '-' + id].last
         console.log('%s : %s', last.id, last.date)
+        let difference = parseInt(Math.abs(last.date.getTime() - today.getTime()) / (1000 * 60) % 60)
+        if(difference > 1) {
+            last.data.weight = 0
+            last.data.stable = true
+        }
         res.send(last)
     } catch(e) {
         res.status(404).end()
