@@ -36,6 +36,7 @@ module.exports = class extends net.Socket {
             case 'EHOSTUNREACH':
             case 'ETIMEDOUT':
             case 'EADDRNOTAVAIL':
+            case 'ERR_SOCKET_CLOSED':
             case 'ECONNREFUSED': this._reconnect(); break;
         }
     }

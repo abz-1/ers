@@ -38,17 +38,19 @@ class TC17P extends Equipment {
         super(options)
         this._connect()
 
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: 0,
-                stable: true
-            }
-        }
+        this._resetLast()
+        // this.last = {
+        //     id: this.id,
+        //     type: this.type,
+        //     date: new Date(),
+        //     data: {
+        //         weight: 0,
+        //         stable: true
+        //     }
+        // }
 
         this._nextValueCommand()
+        //this._kickIntervalId = setInterval(this._kickMe.bind(this), 5000)
         setInterval(this._kickMe.bind(this), 5000)
     }
 
@@ -57,6 +59,24 @@ class TC17P extends Equipment {
         if(diff >= 30) {
             console.error(`${this.id}(${this.module}) ${this.server}:${this.port} \\ "застрял" или головное устройство отключено в течении ${(diff / 60).toFixed(2)} минут.`)
             this._nextValueCommand()
+        }
+        if(diff >= 60) {
+            //clearInterval(this._kickIntervalId)
+            this._resetLast()
+            this.resetAndDestroy()
+            console.error('перезапуск застрявшего')
+        }
+    }
+
+    _resetLast() {
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
         }
     }
 
