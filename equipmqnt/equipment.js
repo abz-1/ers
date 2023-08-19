@@ -29,7 +29,7 @@ module.exports = class extends net.Socket {
     }
 
     _onError(e) {
-        console.error(e)
+        console.error('%s : %s\n%s', this.id, Date.now(), e)
         this.destroy()
         this._reconnect()
         /*
@@ -52,7 +52,7 @@ module.exports = class extends net.Socket {
     }
 
     _reconnect() {
-        console.log('%s reconnecting...', this.id)
+        console.log('%s : %s reconnecting...', this.id, Date.now())
         this.removeAllListeners()
         //this._connect()
         setTimeout(() => { 
