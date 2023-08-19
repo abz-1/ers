@@ -31,6 +31,8 @@ module.exports = class extends net.Socket {
     _onError(e) {
         console.error(e)
         this.destroy()
+        this._reconnect()
+        /*
         switch(e.code) {
             case 'ENETUNREACH':
             case 'EHOSTUNREACH':
@@ -39,6 +41,7 @@ module.exports = class extends net.Socket {
             case 'ERR_SOCKET_CLOSED':
             case 'ECONNREFUSED': this._reconnect(); break;
         }
+        */
     }
 
     _connect() {
