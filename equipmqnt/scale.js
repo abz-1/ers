@@ -51,7 +51,7 @@ class TC17P extends Equipment {
 
         this._nextValueCommand()
         //this._kickIntervalId = setInterval(this._kickMe.bind(this), 5000)
-        setInterval(this._kickMe.bind(this), 5000)
+        setInterval(this._nextValueCommand.bind(this), 1000)
     }
 
     _kickMe() {
@@ -98,7 +98,7 @@ class TC17P extends Equipment {
         this.last.data.stable = stable
 
         this.emit('weight', this.last)
-        this._nextValueCommand()
+        //this._nextValueCommand()
     }
 }
 
