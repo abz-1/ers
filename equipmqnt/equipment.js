@@ -15,6 +15,13 @@ module.exports = class extends net.Socket {
         this.pinouts     = options.pinouts
     }
 
+    _message(m, type = 'log') {
+        switch(type) {
+            case 'error': console.error('%s : %s\n%s', this.id, new Date(), m); break;
+            default: console.log('%s:%s\\ %s', this.id, new Date(), m);
+        }
+    }
+
     request(data) {
         try {
             this.write(data)
@@ -26,10 +33,11 @@ module.exports = class extends net.Socket {
     _onConnet() {
         this.setKeepAlive(true, 500)
         this.on('data', this._onData)
+        this._message('connected.')
     }
 
     _onError(e) {
-        console.error('%s : %s\n%s', this.id, Date.now(), e)
+        this._message(e, 'error')
         this.destroy()
         this._reconnect()
         /*
@@ -52,7 +60,7 @@ module.exports = class extends net.Socket {
     }
 
     _reconnect() {
-        console.log('%s : %s reconnecting...', this.id, Date.now())
+        this._message('reconnecting.')
         this.removeAllListeners()
         //this._connect()
         setTimeout(() => { 
