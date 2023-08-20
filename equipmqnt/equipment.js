@@ -16,9 +16,17 @@ module.exports = class extends net.Socket {
     }
 
     _message(m, type = 'log') {
+        let d_t     = new Date()
+          , year    = d_t.getFullYear()
+          , month   = (d_t.getMonth() + 1).toString().padStart(2, '0')
+          , day     = d_t.getDate().toString().padStart(2, '0')
+          , hour    = d_t.getHours().toString().padStart(2, '0')
+          , minute  = d_t.getMinutes().toString().padStart(2, '0')
+          , seconds = d_t.getSeconds().toString().padStart(2, '0')
+          , stump   = `${year}-${month}-${day} ${hour}:${minute}:${seconds}`
         switch(type) {
-            case 'error': console.error('%s : %s\n%s', this.id, new Date(), m); break;
-            default: console.log('%s:%s\\ %s', this.id, new Date(), m);
+            case 'error': console.error('%s:%s:%s\n%s', this.id, this.module, stump, m); break;
+            default: console.log('%s:%s:%s\\ %s', this.id, this.module, stump, m);
         }
     }
 

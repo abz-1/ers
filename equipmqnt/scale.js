@@ -81,6 +81,7 @@ class TC17P extends Equipment {
     }
 
     _nextValueCommand() {
+        this._message('get next value command.')
         this.request(Buffer.from([0x10]))
     }
 
