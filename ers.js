@@ -56,21 +56,7 @@ async function startDataCllection() {
         skd.forEach((item) => {
             if(item.hasOwnProperty('equipment')) {
                 item.equipment.forEach((eq) => {
-                    let object = undefined
-                    switch(eq.type) {
-                        case 'reader': 
-                            object = new Reader(eq) 
-                            console.log('Loading reader %s', eq.id)
-                            break
-                        case 'scale': 
-                            object = createScale(eq)
-                            console.log('Loading scale %s', eq.id)
-                            break
-                        case 'camera': 
-                            object = new Camera(eq)
-                            console.log('Loading camera %s', eq.id)
-                            break
-                    }
+                    let object = createEquipmentObject(eq)
 
                     if(object != undefined) {
                         equipment[eq.type + '-' + eq.id] = object
@@ -100,25 +86,31 @@ function checkEquipmentState() {
             }
 
             console.error('%s:%s\\ state \'error\' reload object.', options.id, new Date())
-            let object = undefined
-            switch(options.type) {
-                case 'reader': 
-                    object = new Reader(options) 
-                    console.log('Loading reader %s', object.id)
-                    break
-                case 'scale': 
-                    object = createScale(options)
-                    console.log('Loading scale %s', object.id)
-                    break
-                case 'camera': 
-                    object = new Camera(options)
-                    console.log('Loading camera %s', object.id)
-                    break
-            }
+            let object = createEquipmentObject(options)
 
             if(object != undefined) {
                 equipment[key] = object
             }
         }
     }
+}
+
+function createEquipmentObject(options) {
+    let object = undefined
+    switch(options.type) {
+        case 'reader': 
+            object = new Reader(options) 
+            console.log('Loading reader %s', object.id)
+            break
+        case 'scale': 
+            object = createScale(options)
+            console.log('Loading scale %s', object.id)
+            break
+        case 'camera': 
+            object = new Camera(options)
+            console.log('Loading camera %s', object.id)
+            break
+    }
+
+    return object
 }
