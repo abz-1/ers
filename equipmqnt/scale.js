@@ -37,35 +37,9 @@ class TC17P extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-
         this._resetLast()
-        // this.last = {
-        //     id: this.id,
-        //     type: this.type,
-        //     date: new Date(),
-        //     data: {
-        //         weight: 0,
-        //         stable: true
-        //     }
-        // }
-
         this._nextValueCommand()
-        //this._kickIntervalId = setInterval(this._kickMe.bind(this), 5000)
         setInterval(this._nextValueCommand.bind(this), 1000)
-    }
-
-    _kickMe() {
-        let diff = Math.abs((new Date().getTime() - this.last.date.getTime()) / 1000)
-        if(diff >= 30) {
-            console.error(`${this.id}(${this.module}) ${this.server}:${this.port} \\ "застрял" или головное устройство отключено в течении ${(diff / 60).toFixed(2)} минут.`)
-            this._nextValueCommand()
-        }
-        if(diff >= 60) {
-            //clearInterval(this._kickIntervalId)
-            this._resetLast()
-            this.resetAndDestroy()
-            console.error('перезапуск застрявшего')
-        }
     }
 
     _resetLast() {
@@ -81,7 +55,7 @@ class TC17P extends Equipment {
     }
 
     _nextValueCommand() {
-        this._message('get next value command.')
+        //this._message('get next value command.', 'debug')
         this.request(Buffer.from([0x10]))
     }
 
@@ -99,7 +73,6 @@ class TC17P extends Equipment {
         this.last.data.stable = stable
 
         this.emit('weight', this.last)
-        //this._nextValueCommand()
     }
 }
 
@@ -140,7 +113,7 @@ class HBT9 extends Equipment {
     constructor(options) {
         super(options)
         this._connect()
-        
+
         this.last = {
             id: this.id,
             type: this.type,

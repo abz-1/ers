@@ -45,6 +45,7 @@ app.listen(port, async () => {
     console.log('Server started on port: %d', port)
     console.log('Starting data collection')
     await startDataCllection()
+    setInterval(checkEquipmentState, 5000)
 })
 
 async function startDataCllection() {
@@ -79,5 +80,45 @@ async function startDataCllection() {
         })
     } catch(e) {
         console.error(e)
+    }
+}
+
+function checkEquipmentState() {
+    for (key in equipment) {
+        item = equipment[key]
+        if(item.state === 'error') {
+            let options = {
+                id: item.id,
+                type: item.type,
+                module: item.module,
+                direction: item.direction,
+                description: item.description,
+                driver: item.driver,
+                server: item.server,
+                port: item.port,
+                pinouts: item.pinouts
+            }
+
+            console.error('%s:%s\\ state \'error\' reload object.', options.id, new Date())
+            let object = undefined
+            switch(options.type) {
+                case 'reader': 
+                    object = new Reader(options) 
+                    console.log('Loading reader %s', object.id)
+                    break
+                case 'scale': 
+                    object = createScale(options)
+                    console.log('Loading scale %s', object.id)
+                    break
+                case 'camera': 
+                    object = new Camera(options)
+                    console.log('Loading camera %s', object.id)
+                    break
+            }
+
+            if(object != undefined) {
+                equipment[key] = object
+            }
+        }
     }
 }
