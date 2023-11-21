@@ -33,6 +33,40 @@ class IND310 extends Equipment {
     }
 }
 
+class IND780 extends Equipment {
+    constructor(options) {
+        super(options)
+        this._connect()
+
+        this.last = {
+            id: this.id,
+            type: this.type,
+            date: new Date(),
+            data: {
+                weight: 0,
+                stable: true
+            }
+        }
+    }
+
+    _onData(data) {
+        let tmp, stable = false, weight = 0
+
+        try {
+            tmp    = data.slice(1).toString('ascii').replace(/\s\s+/g, ' ').split(' ')
+            stable = (parseInt(tmp[0]) === 10) ? true : false
+            weight = parseInt(tmp[1])
+        } finally {}
+
+        this.last.date = new Date()
+        this.last.data.weight = weight
+        this.last.data.stable = stable
+
+        this.emit('weight', this.last)
+    }
+}
+
+
 class TC17P extends Equipment {
     constructor(options) {
         super(options)
@@ -192,6 +226,7 @@ function createScale(options) {
     try {
         switch(options.module) {
             case 'IND310': result = new IND310(options); break;
+            case 'IND780': result = new IND780(options); break;
             case 'HBT9': result = new HBT9(options); break;
             case 'HBT1B': result = new HBT1B(options); break; 
             case 'TC17P': result = new TC17P(options); break;
