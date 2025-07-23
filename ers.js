@@ -22,7 +22,7 @@ app.get('/events/:type/:id', async (req, res, next) => {
     try {
         let last = await equipment[type + '-' + id].last
         console.log('%s : %s', last.id, last.date)
-        
+
         if(last.data.weight > 0) {
             let today = new Date()
             let difference = parseInt(Math.abs(last.date.getTime() - today.getTime()) / (1000 * 60) % 60)

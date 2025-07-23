@@ -1,31 +1,45 @@
 const Equipment = require('./equipment')
 
-class IND310 extends Equipment {
+class Scale extends Equipment {
     constructor(options) {
         super(options)
-        this._connect()
 
         this.last = {
             id: this.id,
             type: this.type,
             date: new Date(),
+            state: 'something wrong',
             data: {
                 weight: 0,
                 stable: true
             }
         }
+        setInterval(this._setState.bind(this), 60000)
+    }
+
+    _setState() {
+        let now = new Date()
+        let difference = parseInt(Math.abs(this.last.date.getTime() - now.getTime()) / (1000 * 60) % 60)
+        this.last.state = (difference > 1) ? 'something wrong' : 'ok'
+    }
+}
+
+class IND310 extends Scale {
+    constructor(options) {
+        super(options)
+        this._connect()
     }
 
     _onData(data) {
-        let tmp, stable = false, weight = 0
+        let tmp, stable = false, weight = 0, date = new Date()
 
         try {
             tmp    = data.slice(1).toString('ascii').replace(/\s\s+/g, ' ').split(' ')
             stable = (parseInt(tmp[0]) === 10) ? true : false
             weight = parseInt(tmp[1])
+            this.last.date = date
         } finally {}
 
-        this.last.date = new Date()
         this.last.data.weight = weight
         this.last.data.stable = stable
 
@@ -33,32 +47,22 @@ class IND310 extends Equipment {
     }
 }
 
-class IND780 extends Equipment {
+class IND780 extends Scale {
     constructor(options) {
         super(options)
         this._connect()
-
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: 0,
-                stable: true
-            }
-        }
     }
 
     _onData(data) {
-        let tmp, stable = false, weight = 0
+        let tmp, stable = false, weight = 0, date = new Date()
 
         try {
             tmp    = data.slice(1).toString('ascii').replace(/\s\s+/g, ' ').split(' ')
             stable = (parseInt(tmp[0]) === 10) ? true : false
             weight = parseInt(tmp[1])
+            this.last.date = date
         } finally {}
 
-        this.last.date = new Date()
         this.last.data.weight = weight
         this.last.data.stable = stable
 
@@ -67,25 +71,12 @@ class IND780 extends Equipment {
 }
 
 
-class TC17P extends Equipment {
+class TC17P extends Scale {
     constructor(options) {
         super(options)
         this._connect()
-        this._resetLast()
         this._nextValueCommand()
         setInterval(this._nextValueCommand.bind(this), 1000)
-    }
-
-    _resetLast() {
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: 0,
-                stable: true
-            }
-        }
     }
 
     _nextValueCommand() {
@@ -93,15 +84,15 @@ class TC17P extends Equipment {
     }
 
     _onData(data) {
-        let tmp, stable = false, weight = 0
+        let tmp, stable = false, weight = 0, date = new Date()
 
         try {
             tmp    = data.toString()
             stable = (tmp.slice(-1) === '"') ? true : false
             weight = parseInt(tmp.replace(/\D/g, ''))
+            this.last.date = date
         } finally {}
 
-        this.last.date = new Date()
         this.last.data.weight = weight
         this.last.data.stable = stable
 
@@ -109,32 +100,22 @@ class TC17P extends Equipment {
     }
 }
 
-class HBT1B extends Equipment {
+class HBT1B extends Scale {
     constructor(options) {
         super(options)
         this._connect()
-
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: 0,
-                stable: true
-            }
-        }
     }
 
     _onData(data) {
-        let tmp, stable = false, weight = 0
+        let tmp, stable = false, weight = 0, date = new Date()
 
         try {
             tmp    = data.toString('ascii').replace(/\D/g, '')
             stable = true
             weight = parseInt(tmp)
+            this.last.date = date
         } finally {}
 
-        this.last.date = new Date()
         this.last.data.weight = weight
         this.last.data.stable = stable
 
@@ -142,24 +123,14 @@ class HBT1B extends Equipment {
     }
 }
 
-class HBT9 extends Equipment {
+class HBT9 extends Scale {
     constructor(options) {
         super(options)
         this._connect()
-
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: 0,
-                stable: true
-            }
-        }
     }
 
     _onData(data) {
-        let tmp, stable = false, weight = 0
+        let tmp, stable = false, weight = 0, date = new Date()
 
         try {
             tmp = data.toString('ascii').replace(/[\W_]+/g, '')
@@ -167,9 +138,9 @@ class HBT9 extends Equipment {
                 return
             stable = tmp.indexOf('wn-') >= 0 ? false : true
             weight = parseInt(tmp.replace('wn', '').replace('kg', ''))
+            this.last.date = date
         } finally {}
 
-        this.last.date = new Date()
         this.last.data.weight = weight
         this.last.data.stable = stable
 
@@ -177,25 +148,16 @@ class HBT9 extends Equipment {
     }
 }
 
-class NOV extends Equipment {
+class NOV extends Scale {
     constructor(options) {
         super(options)
         this._connect()
-        
+
         this._buffer = Buffer.from([])
-        this.last = {
-            id: this.id,
-            type: this.type,
-            date: new Date(),
-            data: {
-                weight: 0,
-                stable: true
-            }
-        }
     }
 
     _onData(data) {
-        let tmp, stable = false, weight = 0
+        let tmp, stable = false, weight = 0, date = new Date()
 
         try {
             if(data[0] != 0xd) {
@@ -206,13 +168,13 @@ class NOV extends Equipment {
             tmp = this._buffer.slice(1).toString('ascii').replace(/\s\s+/g, ' ').split(' ')
             stable = (parseInt(tmp[0]) === 10) ? true : false
             weight = parseInt(tmp[1])
+            this.last.date = date
         } catch(error) {
             return
         }
 
         this._buffer = Buffer.from([])
 
-        this.last.date = new Date()
         this.last.data.weight = weight
         this.last.data.stable = stable
 
